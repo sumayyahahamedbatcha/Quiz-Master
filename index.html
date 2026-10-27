@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuizMaster - A modern, interactive, and responsive quiz game with multiple categories, live timer, leaderboard, and dark mode.">
+  <meta name="theme-color" content="#0f172a">
+  <title>QuizMaster – Interactive Quiz Game</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Gradient Background Elements -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+  <!-- Confetti Canvas for Victory Celebration -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Main Navigation Header -->
+  <header class="app-header">
+    <div class="container header-container">
+      <a href="#" class="brand-logo" id="brand-logo-btn" aria-label="QuizMaster Home">
+        <div class="logo-icon-wrapper">
+          <i class="fa-solid fa-brain-circuit logo-icon"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Quiz<span class="gradient-text">Master</span></span>
+          <span class="brand-tagline">Interactive Quiz Game</span>
+        </div>
+      </a>
+
+      <nav class="header-actions" aria-label="Quick Actions">
+        <button id="btn-how-to-play" class="icon-btn" title="How to Play" aria-label="Game Rules and How to Play">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="btn-text-responsive">Rules</span>
+        </button>
+
+        <button id="btn-open-leaderboard" class="icon-btn" title="View Leaderboard" aria-label="View Leaderboard">
+          <i class="fa-solid fa-trophy"></i>
+          <span class="btn-text-responsive">Leaderboard</span>
+        </button>
+
+        <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound Effects">
+          <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+        </button>
+
+        <button id="btn-theme-toggle" class="icon-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Dark and Light Mode">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Application Content Area -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- ========================================== -->
+      <!-- VIEW 1: HOME / CATEGORY SELECTION VIEW    -->
+      <!-- ========================================== -->
+      <section id="home-view" class="view-panel active-view" aria-labelledby="hero-title">
+        <!-- Hero Section -->
+        <div class="hero-section text-center">
+          <div class="hero-badge">
+            <i class="fa-solid fa-bolt-lightning"></i> Challenge Yourself & Sharpen Your Mind
+          </div>
+          <h1 id="hero-title" class="hero-title">
+            Test Your Knowledge with <span class="gradient-text">QuizMaster</span>
+          </h1>
+          <p class="hero-subtitle">
+            Choose from 6 exciting categories, answer 10 randomized questions against the clock, and prove your intellect on the global leaderboard!
+          </p>
+        </div>
+
+        <!-- Player Name Input Card -->
+        <div class="player-card glass-card">
+          <div class="player-input-wrapper">
+            <div class="input-icon-box">
+              <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <div class="input-group">
+              <label for="player-name-input">Player Name / Nickname</label>
+              <input 
+                type="text" 
+                id="player-name-input" 
+                placeholder="Enter your name (e.g., Alex The Quizzer)" 
+                maxlength="20"
+                autocomplete="nickname"
+                spellcheck="false"
+              >
+            </div>
+          </div>
+          <p class="input-hint">
+            <i class="fa-solid fa-circle-info"></i> Your score and ranking on the leaderboard will be recorded under this name.
+          </p>
+        </div>
+
+        <!-- Quiz Specifications Banner -->
+        <div class="quiz-info-strip">
+          <div class="info-pill">
+            <i class="fa-solid fa-list-check"></i>
+            <span><strong>10</strong> Questions per Quiz</span>
+          </div>
+          <div class="info-pill">
+            <i class="fa-solid fa-stopwatch"></i>
+            <span><strong>2 Min 30 Sec</strong> Time Limit</span>
+          </div>
+          <div class="info-pill">
+            <i class="fa-solid fa-shuffle"></i>
+            <span>Randomized Questions & Options</span>
+          </div>
+          <div class="info-pill">
+            <i class="fa-solid fa-award"></i>
+            <span>Instant Review & Analytics</span>
+          </div>
+        </div>
+
+        <!-- Category Selection Section -->
+        <div class="category-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fa-solid fa-layer-group"></i> Select a Category
+            </h2>
+            <p class="section-desc">Pick one domain to begin your trivia adventure</p>
+          </div>
+
+          <div class="categories-grid" role="radiogroup" aria-label="Quiz Categories">
+            <!-- 1. General Knowledge -->
+            <div class="category-card" data-category="general-knowledge" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-gk">
+                <i class="fa-solid fa-earth-americas"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">General Knowledge</h3>
+                <p class="cat-desc">World geography, history, capitals, flags, culture, and fascinating global facts.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-medium"><i class="fa-solid fa-gauge-simple"></i> Mixed</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 2. Science -->
+            <div class="category-card" data-category="science" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-science">
+                <i class="fa-solid fa-flask-vial"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">Science</h3>
+                <p class="cat-desc">Physics, chemistry, biology, astronomy, natural laws, and groundbreaking discoveries.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-medium"><i class="fa-solid fa-gauge-simple"></i> Mixed</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 3. Technology -->
+            <div class="category-card" data-category="technology" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-tech">
+                <i class="fa-solid fa-microchip"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">Technology</h3>
+                <p class="cat-desc">Consumer tech, internet origins, hardware, smartphones, networks, and modern innovations.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-medium"><i class="fa-solid fa-gauge-simple"></i> Mixed</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 4. Computer Science -->
+            <div class="category-card" data-category="computer-science" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-cs">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">Computer Science</h3>
+                <p class="cat-desc">Data structures, algorithms, coding languages, Big-O complexity, OS, and Git.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-hard"><i class="fa-solid fa-gauge-high"></i> Advanced</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 5. Mathematics -->
+            <div class="category-card" data-category="mathematics" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-math">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">Mathematics</h3>
+                <p class="cat-desc">Arithmetic, algebra, geometry, calculus, primes, statistics, and logical reasoning.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-hard"><i class="fa-solid fa-gauge-high"></i> Analytical</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 6. Sports -->
+            <div class="category-card" data-category="sports" role="radio" aria-checked="false" tabindex="0">
+              <div class="cat-icon-wrapper cat-sports">
+                <i class="fa-solid fa-futbol"></i>
+              </div>
+              <div class="cat-content">
+                <h3 class="cat-name">Sports</h3>
+                <p class="cat-desc">Football, Olympics, basketball, tennis, cricket, athletics records, and championships.</p>
+                <div class="cat-meta">
+                  <span class="meta-tag"><i class="fa-solid fa-circle-question"></i> 12 Questions</span>
+                  <span class="meta-tag difficulty-easy"><i class="fa-solid fa-gauge"></i> Fun</span>
+                </div>
+              </div>
+              <div class="selection-check" aria-hidden="true">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start Quiz CTA Button Area -->
+        <div class="start-action-container text-center">
+          <button id="btn-start-quiz" class="btn btn-primary btn-large btn-glow" disabled>
+            <i class="fa-solid fa-play"></i> Start Quiz
+          </button>
+          <p id="category-selection-prompt" class="selection-prompt">
+            Please click on a category card above to unlock the quiz!
+          </p>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 2: ACTIVE QUIZ GAME VIEW             -->
+      <!-- ========================================== -->
+      <section id="quiz-view" class="view-panel" aria-labelledby="question-text" style="display: none;">
+        <!-- Quiz Game Top Control Bar -->
+        <div class="quiz-topbar glass-card">
+          <div class="quiz-status-left">
+            <span class="category-badge" id="quiz-category-badge">
+              <i class="fa-solid fa-layer-group"></i> General Knowledge
+            </span>
+            <span class="question-tracker-badge" id="question-tracker">
+              Question 1 of 10
+            </span>
+          </div>
+
+          <div class="quiz-status-right">
+            <!-- Live Timer Indicator -->
+            <div class="timer-badge" id="quiz-timer-badge" role="timer" aria-live="polite">
+              <i class="fa-solid fa-clock timer-icon"></i>
+              <span id="timer-display">02:30</span>
+            </div>
+
+            <!-- Live Score Indicator -->
+            <div class="score-badge" id="live-score-badge">
+              <i class="fa-solid fa-star"></i>
+              <span>Score: <strong id="current-score-num">0</strong></span>
+            </div>
+
+            <!-- Quit Button -->
+            <button id="btn-quit-quiz" class="icon-btn danger-hover" title="Quit Quiz" aria-label="Quit Quiz">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar-fill" id="quiz-progress-bar" style="width: 10%;"></div>
+        </div>
+
+        <!-- Main Question Card -->
+        <div class="question-card glass-card">
+          <!-- Question Header & Text -->
+          <div class="question-header">
+            <span class="question-pill-label" id="question-pill-label">Question #1</span>
+            <h2 id="question-text" class="question-title">
+              Loading question...
+            </h2>
+          </div>
+
+          <!-- Options Container (4 Multiple Choice Options) -->
+          <div class="options-container" id="options-container" role="radiogroup" aria-label="Answer options">
+            <!-- Dynamically populated via script.js -->
+          </div>
+
+          <!-- Instant Feedback & Explanation Notice (revealed upon answering) -->
+          <div id="feedback-panel" class="feedback-panel" style="display: none;" aria-live="assertive">
+            <div class="feedback-icon" id="feedback-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="feedback-content">
+              <h4 id="feedback-status" class="feedback-status">Correct Answer!</h4>
+              <p id="feedback-explanation" class="feedback-explanation">
+                Explanation text goes here.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Navigation Controls -->
+        <div class="quiz-navigation-footer">
+          <button id="btn-prev-question" class="btn btn-secondary" disabled>
+            <i class="fa-solid fa-arrow-left"></i> Previous Question
+          </button>
+
+          <div class="nav-hint">
+            <span id="nav-hint-text">Select an option to proceed</span>
+          </div>
+
+          <button id="btn-next-question" class="btn btn-primary" disabled>
+            Next Question <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 3: RESULTS & PERFORMANCE REVIEW VIEW -->
+      <!-- ========================================== -->
+      <section id="results-view" class="view-panel" aria-labelledby="results-main-title" style="display: none;">
+        <div class="results-container">
+          <!-- Performance Hero Card -->
+          <div class="results-hero-card glass-card text-center">
+            <div class="results-badge-icon" id="results-icon-container">
+              <i class="fa-solid fa-trophy" id="results-badge-icon"></i>
+            </div>
+            
+            <h1 id="results-main-title" class="results-title">Quiz Completed!</h1>
+            <p id="results-player-greeting" class="results-player-greeting">Congratulations, Quiz Champion!</p>
+            <h2 id="results-performance-message" class="results-performance-message">
+              Outstanding! Quiz Genius! 🌟
+            </h2>
+
+            <!-- Circular Gauge & Score Summary -->
+            <div class="score-circle-wrapper">
+              <svg class="score-circle-svg" viewBox="0 0 160 160">
+                <circle class="score-circle-bg" cx="80" cy="80" r="70"></circle>
+                <circle class="score-circle-progress" id="score-circle-bar" cx="80" cy="80" r="70"></circle>
+              </svg>
+              <div class="score-circle-text">
+                <span class="score-percentage-num" id="results-percentage">80%</span>
+                <span class="score-percentage-label">Accuracy</span>
+              </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="results-metrics-grid">
+              <div class="metric-card">
+                <div class="metric-icon metric-score"><i class="fa-solid fa-star"></i></div>
+                <div class="metric-info">
+                  <span class="metric-label">Final Score</span>
+                  <span class="metric-value" id="results-total-score">8 / 10</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon metric-correct"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="metric-info">
+                  <span class="metric-label">Correct</span>
+                  <span class="metric-value text-success" id="results-correct-count">8</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon metric-incorrect"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div class="metric-info">
+                  <span class="metric-label">Incorrect</span>
+                  <span class="metric-value text-danger" id="results-incorrect-count">2</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon metric-time"><i class="fa-solid fa-stopwatch"></i></div>
+                <div class="metric-info">
+                  <span class="metric-label">Time Taken</span>
+                  <span class="metric-value" id="results-time-taken">1m 18s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Results Call to Actions -->
+            <div class="results-action-buttons">
+              <button id="btn-play-again" class="btn btn-primary btn-glow">
+                <i class="fa-solid fa-rotate-right"></i> Play Again
+              </button>
+              <button id="btn-results-leaderboard" class="btn btn-secondary">
+                <i class="fa-solid fa-trophy"></i> View Leaderboard
+              </button>
+              <button id="btn-back-home" class="btn btn-outline">
+                <i class="fa-solid fa-house"></i> Back to Home
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Review Section -->
+          <div class="review-section glass-card">
+            <div class="review-header">
+              <div>
+                <h3 class="review-title"><i class="fa-solid fa-clipboard-check"></i> Detailed Answer Review</h3>
+                <p class="review-subtitle">Review each question, your chosen option, and the correct answers with explanations</p>
+              </div>
+
+              <!-- Filter tabs -->
+              <div class="review-filter-tabs" role="tablist">
+                <button class="review-tab active" data-filter="all" role="tab">All (<span id="count-filter-all">10</span>)</button>
+                <button class="review-tab" data-filter="correct" role="tab">Correct (<span id="count-filter-correct">0</span>)</button>
+                <button class="review-tab" data-filter="incorrect" role="tab">Incorrect (<span id="count-filter-incorrect">0</span>)</button>
+              </div>
+            </div>
+
+            <!-- List of review cards -->
+            <div class="review-list" id="review-list-container">
+              <!-- Dynamically generated via script.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODALS: LEADERBOARD, RULES, CONFIRMATIONS  -->
+  <!-- ========================================== -->
+
+  <!-- Leaderboard Modal -->
+  <div id="modal-leaderboard" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="leaderboard-modal-title">
+    <div class="modal-dialog glass-card">
+      <div class="modal-header">
+        <div class="modal-title-wrapper">
+          <i class="fa-solid fa-trophy modal-icon text-gold"></i>
+          <div>
+            <h3 id="leaderboard-modal-title" class="modal-title">Quiz Champions Leaderboard</h3>
+            <p class="modal-subtitle">Top rankings saved locally on this device</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-leaderboard" aria-label="Close Leaderboard Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Filter Bar -->
+        <div class="leaderboard-filters">
+          <label for="leaderboard-cat-select" class="sr-only">Filter by Category</label>
+          <div class="filter-select-wrapper">
+            <i class="fa-solid fa-filter"></i>
+            <select id="leaderboard-cat-select">
+              <option value="all">All Categories</option>
+              <option value="general-knowledge">General Knowledge</option>
+              <option value="science">Science</option>
+              <option value="technology">Technology</option>
+              <option value="computer-science">Computer Science</option>
+              <option value="mathematics">Mathematics</option>
+              <option value="sports">Sports</option>
+            </select>
+          </div>
+          <span class="leaderboard-count-text" id="leaderboard-entries-count">0 Players</span>
+        </div>
+
+        <!-- Leaderboard Table Container -->
+        <div class="leaderboard-table-responsive">
+          <table class="leaderboard-table" id="leaderboard-table">
+            <thead>
+              <tr>
+                <th class="col-rank">Rank</th>
+                <th class="col-player">Player</th>
+                <th class="col-category">Category</th>
+                <th class="col-score">Score</th>
+                <th class="col-accuracy">Accuracy</th>
+                <th class="col-time">Time</th>
+                <th class="col-date">Date</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-table-body">
+              <!-- Populated by script.js -->
+            </tbody>
+          </table>
+
+          <!-- Empty State -->
+          <div id="leaderboard-empty-state" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-award empty-icon"></i>
+            <h4>No Quiz Records Yet</h4>
+            <p>Complete your first quiz to earn a coveted spot on the leaderboard!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-clear-leaderboard-prompt" class="btn btn-danger-outline">
+          <i class="fa-solid fa-trash-can"></i> Clear Leaderboard
+        </button>
+        <button class="btn btn-secondary modal-close-btn-secondary">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play / Rules Modal -->
+  <div id="modal-rules" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="rules-modal-title">
+    <div class="modal-dialog glass-card">
+      <div class="modal-header">
+        <div class="modal-title-wrapper">
+          <i class="fa-solid fa-circle-question modal-icon text-cyan"></i>
+          <div>
+            <h3 id="rules-modal-title" class="modal-title">How to Play QuizMaster</h3>
+            <p class="modal-subtitle">Quick rules and gameplay instructions</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-rules" aria-label="Close Rules Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body rules-content">
+        <div class="rule-step">
+          <div class="rule-step-num">1</div>
+          <div class="rule-step-body">
+            <h4>Select Your Domain & Name</h4>
+            <p>Enter your player name and pick one of the 6 curated categories. Each game randomly selects 10 questions with shuffled choices.</p>
+          </div>
+        </div>
+
+        <div class="rule-step">
+          <div class="rule-step-num">2</div>
+          <div class="rule-step-body">
+            <h4>Answer Against the Timer</h4>
+            <p>You have <strong>2 minutes and 30 seconds</strong> (150s) to complete all 10 questions. If the clock hits 00:00, your quiz will automatically submit!</p>
+          </div>
+        </div>
+
+        <div class="rule-step">
+          <div class="rule-step-num">3</div>
+          <div class="rule-step-body">
+            <h4>Navigate Freely Without Score Duplication</h4>
+            <p>Each question allows one answer selection. You can click <em>Previous Question</em> to review your earlier picks without losing or duplicating points.</p>
+          </div>
+        </div>
+
+        <div class="rule-step">
+          <div class="rule-step-num">4</div>
+          <div class="rule-step-body">
+            <h4>Analyze Results & Compete</h4>
+            <p>View your final percentage, review detailed explanations for every question, and check your rank on the leaderboard!</p>
+          </div>
+        </div>
+
+        <div class="keyboard-shortcuts-box">
+          <h5><i class="fa-solid fa-keyboard"></i> Pro Tip: Keyboard Navigation</h5>
+          <p>You can use keys <kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd>, <kbd>4</kbd> (or <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, <kbd>D</kbd>) to select answers swiftly, and <kbd>Enter</kbd> to proceed to the next question.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary modal-close-btn-secondary">
+          Got It, Let's Play!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quit Confirmation Modal -->
+  <div id="modal-quit-confirm" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="quit-modal-title">
+    <div class="modal-dialog modal-small glass-card">
+      <div class="modal-header">
+        <div class="modal-title-wrapper">
+          <i class="fa-solid fa-triangle-exclamation modal-icon text-danger"></i>
+          <div>
+            <h3 id="quit-modal-title" class="modal-title">Quit Active Quiz?</h3>
+            <p class="modal-subtitle">Your current progress will be lost</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-quit" aria-label="Cancel Quit">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to exit the current quiz? Any unanswered questions will be forfeited and this attempt won't be saved.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-confirm-quit" class="btn btn-danger">
+          Yes, Quit Quiz
+        </button>
+        <button id="btn-cancel-quit" class="btn btn-secondary">
+          Continue Playing
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Leaderboard Confirmation Modal -->
+  <div id="modal-clear-confirm" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="clear-modal-title">
+    <div class="modal-dialog modal-small glass-card">
+      <div class="modal-header">
+        <div class="modal-title-wrapper">
+          <i class="fa-solid fa-trash-can modal-icon text-danger"></i>
+          <div>
+            <h3 id="clear-modal-title" class="modal-title">Clear Leaderboard?</h3>
+            <p class="modal-subtitle">This action cannot be undone</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-clear" aria-label="Cancel Clear">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to permanently erase all player rankings and score records from LocalStorage?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-confirm-clear-leaderboard" class="btn btn-danger">
+          Yes, Erase All
+        </button>
+        <button id="btn-cancel-clear-leaderboard" class="btn btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container footer-container">
+      <p class="footer-copy">
+        QuizMaster &bull; Interactive Quiz Game &bull; Modern Frontend Mini-Project
+      </p>
+      <div class="footer-links">
+        <span class="tech-badge"><i class="fa-brands fa-html5"></i> HTML5</span>
+        <span class="tech-badge"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+        <span class="tech-badge"><i class="fa-brands fa-js"></i> Vanilla JS</span>
+        <span class="tech-badge"><i class="fa-solid fa-database"></i> LocalStorage</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js" defer></script>
+</body>
+</html>
